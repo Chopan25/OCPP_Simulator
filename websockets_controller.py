@@ -1,5 +1,5 @@
 import sys
-
+import ssl
 import websockets
 import threading
 import asyncio
@@ -23,9 +23,12 @@ class OCPPThread(threading.Thread):
             while self.websocket is None:
                 if self.url is not None:
                     try:
-                        self.websocket = await websockets.connect(self.url, subprotocols=['ocpp1.6'])
-                    except:
-                        print('Something went wrong connecting.')
+                        ssl_context = ssl.SSLContext()
+                        ssl_context.check_hostname = False
+                        ssl_context.verify_mode = ssl.CERT_NONE
+                        self.websocket = await websockets.connect(self.url, subprotocols=['ocpp1.6'],ssl=ssl_context)
+                    except Exception as e:
+                        print(e)
                         self.websocket = None
                         self.url = None
 

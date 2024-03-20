@@ -9,7 +9,7 @@ from ocpp.v16.enums import RegistrationStatus, DiagnosticsStatus, AuthorizationS
 certificate_path = "C:/Users/Ale/Documents/Certificates/certificate(2).crt"
 private_key_path = "C:/Users/Ale/Documents/Certificates/certificate(2).key"
 car_id = 'Autito_chiquito'
-charger_serial= '123456789'
+charger_serial= 'pruebubi'
 SEND_ERROR=True
 
 
@@ -113,8 +113,8 @@ async def main():
     ssl_context.check_hostname = False
     ssl_context.verify_mode = ssl.CERT_NONE
     async with websockets.connect(
-            'ws://localhost:8180/steve/websocket/CentralSystemService/123456789', subprotocols=['ocpp1.6']
-            #f'wss://wevemobility.com:1234/ws/160/3o2k4BPcOGYo2hRxQtYB3Vg1yQ23/{charger_serial}', subprotocols=['ocpp1.6'], ssl=ssl_context
+            #'ws://localhost:8180/steve/websocket/CentralSystemService/123456789', subprotocols=['ocpp1.6']
+            f'wss://192.168.1.60:1427/ws/160/iEqaQbVx2QWawv6McKI6RGOVWKx2//{charger_serial}', subprotocols=['ocpp1.6'], ssl=ssl_context
             ) as ws:
 
         cp = ChargePoint('CP_1', ws)
