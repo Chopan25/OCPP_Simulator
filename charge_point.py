@@ -12,8 +12,6 @@ class ChargePoint(cp):
             charge_point_model="Simulator",
             charge_point_vendor="Panchisco",
             charge_point_serial_number=charger_serial,
-            iccid='',
-            imsi='',
             firmware_version='version:0.0.1',
             meter_serial_number='123456789',
             meter_type='Electromagnetic'

@@ -34,8 +34,12 @@ class OCPPThread(threading.Thread):
 
             print('Connected')
             self.parent_window.btn_connect.setDisabled(True)
+            self.parent_window.btn_close_connection.setEnabled(True)
             self.charge_point = ChargePoint('id',self.websocket)
-            await self.charge_point.start()
+            try:
+                await self.charge_point.start()
+            except:
+                print('Connection closed')
 
         asyncio.set_event_loop(self.loop)
 
@@ -43,6 +47,7 @@ class OCPPThread(threading.Thread):
 
     def stop(self):
         asyncio.run_coroutine_threadsafe(self.websocket.close(), self.loop)
+
 
 
     def send_boot_notification(self):

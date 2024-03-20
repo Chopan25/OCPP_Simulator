@@ -1,7 +1,7 @@
 import time
-
+from utils import cache_string, get_cached_strings
 from PyQt6.QtWidgets import (QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QLineEdit, QHBoxLayout, QSpinBox,
-                             QGroupBox, QComboBox, QCheckBox, QSpacerItem, QSizePolicy)
+                             QGroupBox, QComboBox, QCheckBox, QSpacerItem, QSizePolicy, QCompleter)
 from websockets_controller import OCPPThread
 from views.send_status import StatusNotificationWindow
 from ocpp.v16.enums import ChargePointStatus, ChargePointErrorCode
@@ -13,11 +13,13 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.compose_window()
         self.var = False
-        self.ocpp_thread = OCPPThread(self)
-        self.ocpp_thread.start()
+
 
     # conections methods
     def __on_click_connect_ws_server(self):
+        self.ocpp_thread = OCPPThread(self)
+        self.ocpp_thread.start()
+        cache_string('urls',self.txt_url.text())
         self.ocpp_thread.url = f"{self.txt_url.text()}/{self.txt_serial.text()}"
 
 
@@ -26,9 +28,12 @@ class MainWindow(QMainWindow):
         self.ocpp_thread.send_boot_notification()
         print('Sending boot notification')
 
-    def __on_click_send_status_notification(self):
+    def __on_click_close_conection(self):
         self.ocpp_thread.stop()
         self.ocpp_thread.join()
+        self.btn_connect.setDisabled(False)
+        self.btn_close_connection.setDisabled(True)
+        print(self.ocpp_thread.is_alive())
 
     def __on_click_send_heartbeat(self):
         self.ocpp_thread.send_heart_beat()
@@ -67,11 +72,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def compose_connection(self):
-
-
-
         self.lbl_url = QLabel('Ingrese los datos de coneccion a su sitema.')
         self.txt_url = QLineEdit()
+        self.url_completer = QCompleter(get_cached_strings('urls'))
+        self.txt_url.setCompleter(self.url_completer)
         self.txt_url.setPlaceholderText('URL de su sitema central')
         self.lbl_slash = QLabel('/')
         self.txt_serial = QLineEdit()
@@ -90,19 +94,20 @@ class MainWindow(QMainWindow):
         self.btn_connect = QPushButton("Connect")
         self.btn_connect.clicked.connect(self.__on_click_connect_ws_server)
 
+        self.btn_close_connection = QPushButton("Disconect")
+        self.btn_close_connection.setDisabled(True)
+        self.btn_close_connection.clicked.connect(self.__on_click_close_conection)
+
         self.button_send_boot_notification = QPushButton("Send boot notification")
         self.button_send_boot_notification.clicked.connect(self.__on_click_send_boot_notification)
-
-        self.button_send_status_notification = QPushButton("Send status notification")
-        self.button_send_status_notification.clicked.connect(self.__on_click_send_status_notification)
 
         self.button_sendheart_beat = QPushButton("Send heartbeat")
         self.button_sendheart_beat.clicked.connect(self.__on_click_send_heartbeat)
 
         buttons_layout = QVBoxLayout()
         buttons_layout.addWidget(self.btn_connect)
+        buttons_layout.addWidget(self.btn_close_connection)
         buttons_layout.addWidget(self.button_send_boot_notification)
-        buttons_layout.addWidget(self.button_send_status_notification)
         buttons_layout.addWidget(self.button_sendheart_beat)
 
         return buttons_layout
