@@ -13,6 +13,8 @@ class ChargePoint(cp):
             charge_point_vendor="Panchisco",
             charge_point_serial_number=charger_serial,
             firmware_version='version:0.0.1',
+            iccid='',
+            imsi='',
             meter_serial_number='123456789',
             meter_type='Electromagnetic'
         )
