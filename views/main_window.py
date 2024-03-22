@@ -45,21 +45,28 @@ class MainWindow(QMainWindow):
         print('sending status')
 
     def __on_click_btn_send_start_transaction(self):
-        pass
+        self.ocpp_thread.send_start_transaction()
+        print('sending start transaction')
 
     def __on_click_btn_send_stop_transaction(self):
-        pass
+        self.ocpp_thread.send_stop_transaction()
+        print('sending start transaction')
 
     def __on_click_btn_send_authorization(self):
-        pass
+        self.ocpp_thread.send_authorization()
+        print('sending authorization')
 
     def __on_click_btn_send_data_transfer(self):
-        pass
-    def __on_click_btn_send_diagnostics_status(self):
-        pass
+        self.ocpp_thread.send_data_transfer()
+        print('sending data transfer')
 
-    def __on_click_btn_send_firmaware_status(self):
-        pass
+    def __on_click_btn_send_diagnostics_status(self):
+        self.ocpp_thread.send_diagnostics()
+        print('sending diagnostics')
+
+    def __on_click_btn_send_firmware_status(self):
+        self.ocpp_thread.send_firmware()
+        print('sending firmware')
 
     def __on_click_btn_send_meter_values(self):
         pass
@@ -291,7 +298,7 @@ class MainWindow(QMainWindow):
 
         # reservation Id
         reservation_id_layout = QHBoxLayout()
-        lbl_resrvation_id = QLabel('idTag:')
+        lbl_resrvation_id = QLabel('reservationId:')
         self.txt_resrvation_id = QLineEdit()
         self.txt_resrvation_id.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.txt_resrvation_id.setFixedWidth(150)
@@ -303,6 +310,8 @@ class MainWindow(QMainWindow):
         time_stamp_layout = QHBoxLayout()
         lbl_time_stamp = QLabel('TimeStamp:')
         self.ck_time_stamp_start_transaction = QCheckBox()
+        self.ck_time_stamp_start_transaction.setChecked(True)
+        self.ck_time_stamp_start_transaction.setDisabled(True)
         self.time_spacer = QSpacerItem(80, 0, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         time_stamp_layout.addWidget(lbl_time_stamp)
         time_stamp_layout.addSpacerItem(self.time_spacer)
@@ -495,7 +504,7 @@ class MainWindow(QMainWindow):
         group.setMaximumWidth(270)
 
         self.btn_send_firmaware_status = QPushButton("Send")
-        self.btn_send_firmaware_status.clicked.connect(self.__on_click_btn_send_firmaware_status)
+        self.btn_send_firmaware_status.clicked.connect(self.__on_click_btn_send_firmware_status)
 
         group_layout = QVBoxLayout()
 

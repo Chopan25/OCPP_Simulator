@@ -3,6 +3,7 @@ import ssl
 import websockets
 import threading
 import asyncio
+from datetime import datetime
 
 import views.main_window
 from charge_point import ChargePoint
@@ -23,10 +24,14 @@ class OCPPThread(threading.Thread):
             while self.websocket is None:
                 if self.url is not None:
                     try:
-                        ssl_context = ssl.SSLContext()
-                        ssl_context.check_hostname = False
-                        ssl_context.verify_mode = ssl.CERT_NONE
-                        self.websocket = await websockets.connect(self.url, subprotocols=['ocpp1.6'],ssl=ssl_context)
+                        if self.url[:3] == 'wss':
+                            ssl_context = ssl.SSLContext()
+                            ssl_context.check_hostname = False
+                            ssl_context.verify_mode = ssl.CERT_NONE
+                            self.websocket = await websockets.connect(self.url, subprotocols=['ocpp1.6'],
+                                                                      ssl=ssl_context)
+                        else:
+                            self.websocket = await websockets.connect(self.url, subprotocols=['ocpp1.6'])
                     except Exception as e:
                         print(e)
                         self.websocket = None
@@ -88,3 +93,37 @@ class OCPPThread(threading.Thread):
                 print('se rompio :(')
         else:
             print("Event loop is not running.")
+
+    def send_start_transaction(self):
+        async def send_transaction():
+            await self.charge_point.start_transaction(
+                conn_id = self.parent_window.spin_conn_id_start_trasaction.value(),
+                meter_start=self.parent_window.txt_meter_start.text(),
+                id_tag=self.parent_window.txt_idtag.text(),
+                reservation_id=self.parent_window.txt_resrvation_id.text()
+            )
+
+        if self.loop.is_running():
+            try:
+                asyncio.run_coroutine_threadsafe(send_transaction(), self.loop)
+            except Exception as e:
+                print(e)
+        else:
+            print("Event loop is not running.")
+
+
+    def send_stop_transaction(self):
+        pass
+
+    def send_authorization(self):
+        pass
+
+    def send_data_transfer(self):
+        pass
+
+    def send_diagnostics(self):
+        pass
+
+    def send_firmware(self):
+        pass
+

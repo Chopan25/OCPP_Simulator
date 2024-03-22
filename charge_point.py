@@ -1,6 +1,7 @@
 from ocpp.v16 import call, ChargePoint as cp
 from ocpp.v16.enums import RegistrationStatus, DiagnosticsStatus, AuthorizationStatus, ChargePointStatus, ChargePointErrorCode
 import asyncio
+from _datetime import datetime
 
 
 car_id = 'Autito_chiquito'
@@ -48,12 +49,13 @@ class ChargePoint(cp):
             print("Authorized by central system.")
         return response.id_tag_info
 
-    async def start_transaction(self, id_tag):
+    async def start_transaction(self,conn_id,meter_start,id_tag,reservation_id):
         request = call.StartTransactionPayload(
-            connector_id=1,
-            meter_start=0,
-            timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
-            id_tag=id_tag
+            connector_id=int(conn_id),
+            meter_start=int(meter_start),
+            timestamp=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
+            id_tag=str(id_tag),
+            reservation_id=int(reservation_id)
         )
         response = await self.call(request)
         print(f'transactionID: {response.transaction_id}')
