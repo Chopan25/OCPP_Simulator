@@ -98,9 +98,9 @@ class OCPPThread(threading.Thread):
         async def send_transaction():
             await self.charge_point.start_transaction(
                 conn_id = self.parent_window.spin_conn_id_start_trasaction.value(),
-                meter_start=self.parent_window.txt_meter_start.text(),
+                meter_start=self.parent_window.spin_meter_start.value(),
                 id_tag=self.parent_window.txt_idtag.text(),
-                reservation_id=self.parent_window.txt_resrvation_id.text()
+                reservation_id=self.parent_window.spin_resrvation_id.value()
             )
 
         if self.loop.is_running():
@@ -113,7 +113,21 @@ class OCPPThread(threading.Thread):
 
 
     def send_stop_transaction(self):
-        pass
+        async def send_stop_transaction():
+            await self.charge_point.stop_transaction(
+                id_tag=self.parent_window.txt_idtag_stop_transaction.text(),
+                meter_stop=self.parent_window.spin_meter_stop.value(),
+                transaction_id=self.parent_window.spin_transaction_id.value(),
+                reason=self.parent_window.cmb_reason.currentText()
+            )
+
+        if self.loop.is_running():
+            try:
+                asyncio.run_coroutine_threadsafe(send_stop_transaction(), self.loop)
+            except Exception as e:
+                print(e)
+        else:
+            print("Event loop is not running.")
 
     def send_authorization(self):
         pass

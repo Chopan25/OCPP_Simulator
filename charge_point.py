@@ -50,23 +50,27 @@ class ChargePoint(cp):
         return response.id_tag_info
 
     async def start_transaction(self,conn_id,meter_start,id_tag,reservation_id):
+        if reservation_id == 0:
+            reservation_id = None
+
         request = call.StartTransactionPayload(
             connector_id=int(conn_id),
             meter_start=int(meter_start),
             timestamp=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
             id_tag=str(id_tag),
-            reservation_id=int(reservation_id)
+            reservation_id=reservation_id
         )
         response = await self.call(request)
         print(f'transactionID: {response.transaction_id}')
         return response.transaction_id
 
-    async def stop_transaction(self, id_tag,transactionId):
+    async def stop_transaction(self, id_tag, meter_stop, transaction_id,reason):
         request = call.StopTransactionPayload(
-            meter_stop=10,
+            meter_stop=int(meter_stop),
             timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
-            id_tag=id_tag,
-            transaction_id=transactionId
+            id_tag=str(id_tag),
+            transaction_id=int(transaction_id),
+            reason=str(reason)
         )
         response = await self.call(request)
         return response

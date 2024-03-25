@@ -289,21 +289,21 @@ class MainWindow(QMainWindow):
         # Meter Start
         meter_start_layout = QHBoxLayout()
         lbl_idtag = QLabel('meterStart:')
-        self.txt_meter_start = QLineEdit()
-        self.txt_meter_start.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.txt_meter_start.setFixedWidth(150)
+        self.spin_meter_start = QSpinBox()
+        self.spin_meter_start.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.spin_meter_start.setFixedWidth(150)
         meter_start_layout.addWidget(lbl_idtag)
-        meter_start_layout.addWidget(self.txt_meter_start)
+        meter_start_layout.addWidget(self.spin_meter_start)
         group_layout.addLayout(meter_start_layout)
 
         # reservation Id
         reservation_id_layout = QHBoxLayout()
         lbl_resrvation_id = QLabel('reservationId:')
-        self.txt_resrvation_id = QLineEdit()
-        self.txt_resrvation_id.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.txt_resrvation_id.setFixedWidth(150)
+        self.spin_resrvation_id = QSpinBox()
+        self.spin_resrvation_id.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.spin_resrvation_id.setFixedWidth(150)
         reservation_id_layout.addWidget(lbl_resrvation_id)
-        reservation_id_layout.addWidget(self.txt_resrvation_id)
+        reservation_id_layout.addWidget(self.spin_resrvation_id)
         group_layout.addLayout(reservation_id_layout)
 
         # timestamp
@@ -349,18 +349,20 @@ class MainWindow(QMainWindow):
 
         # Meter Stop
         meter_start_layout = QHBoxLayout()
-        lbl_idtag = QLabel('meterStart:')
-        self.txt_meter_stop = QLineEdit()
-        self.txt_meter_stop.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.txt_meter_stop.setFixedWidth(150)
+        lbl_idtag = QLabel('meterStop:')
+        self.spin_meter_stop = QSpinBox()
+        self.spin_meter_stop.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.spin_meter_stop.setFixedWidth(150)
         meter_start_layout.addWidget(lbl_idtag)
-        meter_start_layout.addWidget(self.txt_meter_stop)
+        meter_start_layout.addWidget(self.spin_meter_stop)
         group_layout.addLayout(meter_start_layout)
 
         # time stamp
         time_stamp_layout = QHBoxLayout()
         lbl_time_stamp = QLabel('TimeStamp:')
         self.ck_time_stamp_stop_trasaction = QCheckBox()
+        self.ck_time_stamp_stop_trasaction.setChecked(True)
+        self.ck_time_stamp_stop_trasaction.setDisabled(True)
         time_spacer = QSpacerItem(80, 0, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         time_stamp_layout.addWidget(lbl_time_stamp)
         time_stamp_layout.addSpacerItem(time_spacer)
@@ -370,11 +372,11 @@ class MainWindow(QMainWindow):
         # transaction Id
         reservation_id_layout = QHBoxLayout()
         lbl_resrvation_id = QLabel('transactionId:')
-        self.txt_transaction_id = QLineEdit() #ToDo: cargar automaticamente lo que se recibe de la start transaction
-        self.txt_transaction_id.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.txt_transaction_id.setFixedWidth(150)
+        self.spin_transaction_id = QSpinBox() #ToDo: cargar automaticamente lo que se recibe de la start transaction
+        self.spin_transaction_id.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.spin_transaction_id.setFixedWidth(150)
         reservation_id_layout.addWidget(lbl_resrvation_id)
-        reservation_id_layout.addWidget(self.txt_transaction_id)
+        reservation_id_layout.addWidget(self.spin_transaction_id)
         group_layout.addLayout(reservation_id_layout)
 
         # reason
