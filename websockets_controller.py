@@ -130,14 +130,60 @@ class OCPPThread(threading.Thread):
             print("Event loop is not running.")
 
     def send_authorization(self):
-        pass
+        async def send_authorization():
+            await self.charge_point.send_authorization(
+                id_tag=self.parent_window.txt_idtag_authorize.text(),
+            )
+
+        if self.loop.is_running():
+            try:
+                asyncio.run_coroutine_threadsafe(send_authorization(), self.loop)
+            except Exception as e:
+                print(e)
+        else:
+            print("Event loop is not running.")
 
     def send_data_transfer(self):
-        pass
+        async def send_data_transfer():
+            await self.charge_point.send_data_transfer(
+                vendor_id=self.parent_window.vendor_id.text(),
+                message_id=self.parent_window.txt_messageId.text(),
+                data=self.parent_window.txt_data.text()
+            )
+
+        if self.loop.is_running():
+            try:
+                asyncio.run_coroutine_threadsafe(send_data_transfer(), self.loop)
+            except Exception as e:
+                print(e)
+        else:
+            print("Event loop is not running.")
 
     def send_diagnostics(self):
-        pass
+        async def send_diagnostics():
+            await self.charge_point.send_diagnostics(
+                status=self.parent_window.cmb_status.currentText(),
+            )
+
+        if self.loop.is_running():
+            try:
+                asyncio.run_coroutine_threadsafe(send_diagnostics(), self.loop)
+            except Exception as e:
+                print(e)
+        else:
+            print("Event loop is not running.")
 
     def send_firmware(self):
-        pass
+        async def send_firmware():
+            await self.charge_point.send_firmware(
+                status=self.parent_window.cmb_firmware_status.currentText(),
+            )
+
+        if self.loop.is_running():
+            try:
+                asyncio.run_coroutine_threadsafe(send_firmware(), self.loop)
+            except Exception as e:
+                print(e)
+        else:
+            print("Event loop is not running.")
 

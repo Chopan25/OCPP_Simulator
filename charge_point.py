@@ -29,21 +29,20 @@ class ChargePoint(cp):
             self.heart_beat_task = asyncio.create_task(self.heart_beat())
         return response.status
 
-    async def send_diagnostics_status_notification(self):
+    async def send_diagnostics(self,status):
         request = call.DiagnosticsStatusNotificationPayload(
-            status=DiagnosticsStatus.uploaded
+            status=status
         )
         response = await self.call(request)
 
-    async def send_meter_values(self, meter_value):
-        request = call.MeterValuesPayload(
-            connector_id=1,
-            meter_value='IDK'
+    async def send_firmware(self,status):
+        request = call.FirmwareStatusNotificationPayload(
+            status=status
         )
         response = await self.call(request)
 
-    async def send_authorization(self):
-        request = call.AuthorizePayload(id_tag=car_id)
+    async def send_authorization(self,id_tag):
+        request = call.AuthorizePayload(id_tag=id_tag)
         response = await self.call(request)
         if response.id_tag_info['status'] == AuthorizationStatus.accepted:
             print("Authorized by central system.")
@@ -95,10 +94,19 @@ class ChargePoint(cp):
             error_code=error_code,
             info=info,
             status=status,
-            #timestamp=timestamp,
+            timestamp=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
             vendor_id=vendor_id,
             vendor_error_code=vendor_error_code
         )
 
+        response = await self.call(request)
+        return response
+
+    async def send_data_transfer(self,vendor_id,message_id,data):
+        request = call.DataTransferPayload(
+            vendor_id='vendor_id',
+            message_id='message_id',
+            data='data'
+        )
         response = await self.call(request)
         return response

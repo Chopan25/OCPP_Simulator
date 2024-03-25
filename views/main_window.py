@@ -221,11 +221,13 @@ class MainWindow(QMainWindow):
         # time stamp
         time_stamp_layout = QHBoxLayout()
         self.lbl_time_stamp = QLabel('TimeStamp:')
-        self.ck_time_stamp_id = QCheckBox()
+        self.ck_time_stamp_status = QCheckBox()
+        self.ck_time_stamp_status.setChecked(True)
+        self.ck_time_stamp_status.setDisabled(True)
         self.time_spacer = QSpacerItem(80, 0, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         time_stamp_layout.addWidget(self.lbl_time_stamp)
         time_stamp_layout.addSpacerItem(self.time_spacer)
-        time_stamp_layout.addWidget(self.ck_time_stamp_id)
+        time_stamp_layout.addWidget(self.ck_time_stamp_status)
         group_layout.addLayout(time_stamp_layout)
 
         # Vendor ID
@@ -457,7 +459,7 @@ class MainWindow(QMainWindow):
 
         # data
         data_layout = QHBoxLayout()
-        lbl_vendorId = QLabel('vendorId:')
+        lbl_vendorId = QLabel('data:')
         self.txt_data = QLineEdit()
         self.txt_data.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.txt_data.setFixedWidth(150)
@@ -530,7 +532,7 @@ class MainWindow(QMainWindow):
         return window_layout
 
     def compose_meter_value(self):
-        group = QGroupBox('Data transfer')
+        group = QGroupBox('Meter transfer')
         group.setMaximumWidth(270)
 
         self.btn_send_meter_value = QPushButton("Send")
