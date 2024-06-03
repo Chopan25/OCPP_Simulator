@@ -122,11 +122,11 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
     def compose_connection(self):
-        self.lbl_url = QLabel('Ingrese los datos de coneccion a su sitema.')
+        self.lbl_url = QLabel('Ingrese los datos de conexion a su sistema.')
         self.txt_url = QLineEdit()
         self.url_completer = QCompleter(get_cached_strings('urls'))
         self.txt_url.setCompleter(self.url_completer)
-        self.txt_url.setPlaceholderText('URL de su sitema central')
+        self.txt_url.setPlaceholderText('URL de su sistema central')
         self.lbl_slash = QLabel('/')
         self.txt_serial = QLineEdit()
         self.txt_serial.setPlaceholderText('Numero de serie del dispositivo')
@@ -292,6 +292,7 @@ class MainWindow(QMainWindow):
         meter_start_layout = QHBoxLayout()
         lbl_idtag = QLabel('meterStart:')
         self.spin_meter_start = QSpinBox()
+        self.spin_meter_start.setMaximum(9999999)
         self.spin_meter_start.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.spin_meter_start.setFixedWidth(150)
         meter_start_layout.addWidget(lbl_idtag)
@@ -353,6 +354,7 @@ class MainWindow(QMainWindow):
         meter_start_layout = QHBoxLayout()
         lbl_idtag = QLabel('meterStop:')
         self.spin_meter_stop = QSpinBox()
+        self.spin_meter_stop.setMaximum(9999999)
         self.spin_meter_stop.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.spin_meter_stop.setFixedWidth(150)
         meter_start_layout.addWidget(lbl_idtag)
@@ -375,6 +377,7 @@ class MainWindow(QMainWindow):
         reservation_id_layout = QHBoxLayout()
         lbl_resrvation_id = QLabel('transactionId:')
         self.spin_transaction_id = QSpinBox() #ToDo: cargar automaticamente lo que se recibe de la start transaction
+        self.spin_transaction_id.setMaximum(9999999)
         self.spin_transaction_id.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.spin_transaction_id.setFixedWidth(150)
         reservation_id_layout.addWidget(lbl_resrvation_id)
