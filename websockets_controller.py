@@ -81,11 +81,10 @@ class OCPPThread(threading.Thread):
                 error_code=self.parent_window.cmb_err_code.currentText(),
                 info=self.parent_window.txt_info_code.text(),
                 status=self.parent_window.cmb_sts_code.currentText(),
-                timestamp=self.parent_window.ck_time_stamp_id.checkState(),
+                #timestamp=self.parent_window.ck_time_stamp_id.checkState(),
                 vendor_id=self.parent_window.txt_vndr_id.text(),
                 vendor_error_code=self.parent_window.txt_vndr_err_code.text()
             )
-
         if self.loop.is_running():
             try:
                 asyncio.run_coroutine_threadsafe(send_status(), self.loop)
