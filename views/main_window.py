@@ -44,6 +44,10 @@ class MainWindow(QMainWindow):
         self.ocpp_thread.send_status()
         print('sending status')
 
+    def __on_click_btn_send_many_status(self):
+        self.ocpp_thread.send_many_status()
+        print('sending many status')
+
     def __on_click_btn_send_start_transaction(self):
         self.ocpp_thread.send_start_transaction()
         print('sending start transaction')
@@ -69,8 +73,7 @@ class MainWindow(QMainWindow):
         print('sending firmware')
 
     def __on_click_btn_send_meter_values(self):
-        pass
-        #ToDo: implement
+        self.ocpp_thread.send_meter_values()
 
     # other methods
     def close_event(self):
@@ -79,8 +82,8 @@ class MainWindow(QMainWindow):
     # composers
     def compose_window(self):
         self.setWindowTitle('OCPP Simulator')
-        self.setMaximumSize(940,440)
-        self.setMinimumSize(940, 440)
+        self.setMaximumSize(940,480)
+        self.setMinimumSize(940, 480)
 
         # first row
         # call all composers
@@ -170,10 +173,10 @@ class MainWindow(QMainWindow):
         group = QGroupBox('Status Notifications')
         group.setMaximumWidth(270)
 
-        self.btn_send_status = QPushButton("Send"
-                                           "")
+        self.btn_send_status = QPushButton("Send")
+        self.btn_send_many_status = QPushButton("Send many")
         self.btn_send_status.clicked.connect(self.__on_click_btn_send_status)
-
+        self.btn_send_many_status.clicked.connect(self.__on_click_btn_send_many_status)
         group_layout = QVBoxLayout()
 
         # Connector ID
@@ -251,6 +254,7 @@ class MainWindow(QMainWindow):
         group_layout.addLayout(vndr_err_code_layout)
 
         group_layout.addWidget(self.btn_send_status)
+        group_layout.addWidget(self.btn_send_many_status)
 
         group.setLayout(group_layout)
         window_layout = QVBoxLayout()
@@ -535,7 +539,7 @@ class MainWindow(QMainWindow):
         return window_layout
 
     def compose_meter_value(self):
-        group = QGroupBox('Meter transfer')
+        group = QGroupBox('Meter value')
         group.setMaximumWidth(270)
 
         self.btn_send_meter_value = QPushButton("Send")
@@ -553,19 +557,26 @@ class MainWindow(QMainWindow):
         conn_id_layout.addWidget(self.spin_conn_id_meter_value)
         group_layout.addLayout(conn_id_layout)
 
+        # Meter value
+        value_layout = QHBoxLayout()
+        lbl_value = QLabel('Value:')
+        self.txt_meter_value = QLineEdit()
+        self.txt_meter_value.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.txt_meter_value.setFixedWidth(150)
+        value_layout.addWidget(lbl_value)
+        value_layout.addWidget(self.txt_meter_value)
+        group_layout.addLayout(value_layout)
+
         # transaction Id
         reservation_id_layout = QHBoxLayout()
         lbl_resrvation_id = QLabel('transactionId:')
-        self.txt_transaction_id_meter_value = QLineEdit()  # ToDo: cargar automaticamente lo que se recibe de la start transaction
+        self.txt_transaction_id_meter_value = QSpinBox() #ToDo: cargar automaticamente lo que se recibe de la start transaction
+        self.txt_transaction_id_meter_value.setMaximum(9999999)
         self.txt_transaction_id_meter_value.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.txt_transaction_id_meter_value.setFixedWidth(150)
         reservation_id_layout.addWidget(lbl_resrvation_id)
         reservation_id_layout.addWidget(self.txt_transaction_id_meter_value)
         group_layout.addLayout(reservation_id_layout)
-
-
-        #ToDo: Agregar meter value
-        self.btn_send_meter_value.setDisabled(True)
 
         group_layout.addWidget(self.btn_send_meter_value)
 
@@ -574,4 +585,3 @@ class MainWindow(QMainWindow):
         window_layout.addWidget(group)
 
         return window_layout
-

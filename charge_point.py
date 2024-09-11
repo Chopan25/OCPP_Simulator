@@ -1,5 +1,6 @@
 from ocpp.v16 import call, ChargePoint as cp
 from ocpp.v16.enums import RegistrationStatus, DiagnosticsStatus, AuthorizationStatus, ChargePointStatus, ChargePointErrorCode
+from ocpp.v16.datatypes import MeterValue, SampledValue
 import asyncio
 from _datetime import datetime
 
@@ -77,14 +78,12 @@ class ChargePoint(cp):
     async def force_heart_beat(self):
         request = call.HeartbeatPayload()
         response = await self.call(request)
-        print(response.currentTime)
 
     async def heart_beat(self):
         while True:
             await asyncio.sleep(self.interval)
             request = call.HeartbeatPayload()
             response = await self.call(request)
-            print(response.currentTime)
 
     async def send_status_notification(self, connector_id=None, error_code=None, info=None, status=None, timestamp=None,
                                        vendor_id=None, vendor_error_code=None):
@@ -109,4 +108,24 @@ class ChargePoint(cp):
             data='data'
         )
         response = await self.call(request)
+        return response
+
+    async def send_meter_values(self,connector_id,meter_value: str,transaction_id):
+        print('sending meter values')
+        request = call.MeterValuesPayload(
+            connector_id=connector_id,
+            meter_value=[MeterValue(
+                timestamp=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S'),
+                sampled_value=[
+                    SampledValue(
+                        value=meter_value
+                    )
+                ])
+            ],
+            transaction_id=transaction_id
+        )
+
+        response = await self.call(request)
+
+        print('did not crash')
         return response

@@ -93,15 +93,37 @@ class OCPPThread(threading.Thread):
         else:
             print("Event loop is not running.")
 
+    def send_many_status(self):
+        async def send_status(connector_id):
+            await self.charge_point.send_status_notification(
+                connector_id=connector_id,
+                error_code=self.parent_window.cmb_err_code.currentText(),
+                info=self.parent_window.txt_info_code.text(),
+                status=self.parent_window.cmb_sts_code.currentText(),
+                # timestamp=self.parent_window.ck_time_stamp_id.checkState(),
+                vendor_id=self.parent_window.txt_vndr_id.text(),
+                vendor_error_code=self.parent_window.txt_vndr_err_code.text()
+            )
+
+        if self.loop.is_running():
+            try:
+                for connector in range(self.parent_window.spin_conn_id.value()):
+                    asyncio.run_coroutine_threadsafe(send_status(connector), self.loop)
+            except:
+                print('se rompio :(')
+        else:
+            print("Event loop is not running.")
+
     def send_start_transaction(self):
         async def send_transaction():
-            await self.charge_point.start_transaction(
+            transaction_id = await self.charge_point.start_transaction(
                 conn_id = self.parent_window.spin_conn_id_start_trasaction.value(),
                 meter_start=self.parent_window.spin_meter_start.value(),
                 id_tag=self.parent_window.txt_idtag.text(),
-                reservation_id=self.parent_window.spin_resrvation_id.value()
+                reservation_id=self.parent_window.spin_resrvation_id.value(),
             )
-
+            self.parent_window.spin_transaction_id.setValue(transaction_id)
+            self.parent_window.txt_transaction_id_meter_value.setValue(transaction_id)
         if self.loop.is_running():
             try:
                 asyncio.run_coroutine_threadsafe(send_transaction(), self.loop)
@@ -186,3 +208,18 @@ class OCPPThread(threading.Thread):
         else:
             print("Event loop is not running.")
 
+    def send_meter_values(self):
+        async def send_meter_values():
+            await self.charge_point.send_meter_values(
+                connector_id = self.parent_window.spin_conn_id_meter_value.value(),
+                meter_value = str(self.parent_window.txt_meter_value.text()),
+                transaction_id = self.parent_window.txt_transaction_id_meter_value.value()
+            )
+
+        if self.loop.is_running():
+            try:
+                asyncio.run_coroutine_threadsafe(send_meter_values(), self.loop)
+            except Exception as e:
+                print(e)
+        else:
+            print("Event loop is not running.")
