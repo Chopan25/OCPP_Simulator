@@ -108,7 +108,7 @@ class OCPPThread(threading.Thread):
         if self.loop.is_running():
             try:
                 for connector in range(self.parent_window.spin_conn_id.value()):
-                    asyncio.run_coroutine_threadsafe(send_status(connector), self.loop)
+                    asyncio.run_coroutine_threadsafe(send_status(connector + 1), self.loop)
             except:
                 print('se rompio :(')
         else:
